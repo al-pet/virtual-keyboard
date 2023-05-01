@@ -1,3 +1,5 @@
+let altKey = 0;
+
 const Keyboard = {
   units: {
     main: null,
@@ -130,7 +132,13 @@ const Keyboard = {
           keyElement.classList.add('keyboard__key-large');
 
           keyElement.addEventListener('click', () => {
-
+            this.features.value += '';
+            if (altKey === 1) {
+              localStorage.lang = localStorage.lang === 'ru' ? localStorage.lang = 'en' : localStorage.lang = 'ru';
+              Keyboard.stop();
+              Keyboard.start();
+              altKey = 0;
+            };
           });
 
           break;
@@ -201,6 +209,8 @@ const Keyboard = {
 
           keyElement.addEventListener('click', () => {
             this.features.value += '';
+            altKey = 1;
+            keyElement.classList.add('active');
             this.triggerEvent('oninput');
           });
 
