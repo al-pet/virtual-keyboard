@@ -279,16 +279,20 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('keydown', (event) => {
-  document.querySelector(`button[data-code=${event.code}]`).classList.add('active');
+  if (document.querySelector(`button[data-code=${event.code}]`)) {
+    document.querySelector(`button[data-code=${event.code}]`).classList.add('active');
 
-  if (event.key === 'Shift' && event.altKey) {
-    localStorage.lang = localStorage.lang === 'ru' ? localStorage.lang = 'en' : localStorage.lang = 'ru';
+    if (event.key === 'Shift' && event.altKey) {
+      localStorage.lang = localStorage.lang === 'ru' ? localStorage.lang = 'en' : localStorage.lang = 'ru';
 
-    Keyboard.stop();
-    Keyboard.start();
+      Keyboard.stop();
+      Keyboard.start();
+    }
   }
 });
 
 document.addEventListener('keyup', (event) => {
-  document.querySelector(`button[data-code=${event.code}]`).classList.remove('active');
+  if (document.querySelector(`button[data-code=${event.code}]`)) {
+    document.querySelector(`button[data-code=${event.code}]`).classList.remove('active');
+  }
 });
