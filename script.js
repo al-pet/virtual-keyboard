@@ -81,6 +81,7 @@ const Keyboard = {
       const keyElement = document.createElement('button');
 
       keyElement.classList.add('keyboard__key');
+      let txta = document.querySelector('.keyboard-input');
 
       switch (key) {
         case 'backspace':
@@ -90,6 +91,9 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.features.value = this.features.value.substring(0, this.features.value.length - 1);
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -100,6 +104,9 @@ const Keyboard = {
 
           keyElement.addEventListener('click', () => {
             this.togglecaps();
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -111,6 +118,9 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.features.value += '\n';
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -123,6 +133,9 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.features.value += '    ';
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -138,6 +151,9 @@ const Keyboard = {
               Keyboard.stop();
               Keyboard.start();
               altKey = 0;
+              txta.focus();
+              txta.setSelectionRange(txta.value.length, txta.value.length);
+
             };
           });
 
@@ -149,6 +165,9 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.features.value += '↑';
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -159,6 +178,9 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.features.value += '↓';
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -169,6 +191,9 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.features.value += '⟵';
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -179,6 +204,9 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.features.value += '⟶';
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -190,6 +218,9 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.features.value += ' ';
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -200,6 +231,9 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.features.value += '';
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -212,6 +246,9 @@ const Keyboard = {
             altKey = 1;
             keyElement.classList.add('active');
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
@@ -222,19 +259,32 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.features.value = this.features.value.substring(0, this.features.value.length - 1);
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
 
           break;
 
-
-
         default:
+
           keyElement.textContent = key.toLowerCase();
 
           keyElement.addEventListener('click', () => {
             this.features.value += this.features.caps ? key.toUpperCase() : key.toLowerCase();
             this.triggerEvent('oninput');
+            txta.focus();
+            txta.setSelectionRange(txta.value.length, txta.value.length);
+
           });
+
+          document.addEventListener('keyup', (event) => {
+            event.preventDefault();
+            if (event.key.toLowerCase() == key) {
+              this.features.value += event.key;
+            }
+          });
+
 
           break;
       }
@@ -268,7 +318,7 @@ const Keyboard = {
 
 window.addEventListener('DOMContentLoaded', () => {
   const note = document.createElement('p');
-  note.innerHTML = `Смена раскладки: [alt] + [shift]. Выполнено на Windows 11.`;
+  note.innerHTML = 'Смена раскладки: [alt] + [shift]. Выполнено на Windows 11.';
   document.body.append(note);
   const textArea = document.createElement('textarea');
   textArea.className = 'keyboard-input';
