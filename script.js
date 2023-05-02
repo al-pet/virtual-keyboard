@@ -1,4 +1,6 @@
 let altKey = 0;
+let keySet;
+let eventCode;
 
 const Keyboard = {
   units: {
@@ -33,6 +35,7 @@ const Keyboard = {
 
     document.querySelectorAll('.keyboard-input').forEach((element) => {
       this.open(element.value, (currentValue) => {
+        /* eslint-disable-next-line */
         element.value = currentValue;
       });
     });
@@ -75,8 +78,6 @@ const Keyboard = {
       'ControlLeft', 'AltLeft', 'Space', 'AltRight', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'ControlRight',
     ];
 
-    // const createIconHTML = (icon) => `<i class="icon">${icon}</i>`;
-
     keySet.forEach((key) => {
       const keyElement = document.createElement('button');
 
@@ -89,10 +90,26 @@ const Keyboard = {
           keyElement.textContent = key.toLowerCase();
 
           keyElement.addEventListener('click', () => {
-            this.features.value = this.features.value.substring(0, this.features.value.length - 1);
+            const pos = txta.selectionStart;
+            this.features.value =
+              this.features.value.substring(0, pos - 1) +
+              this.features.value.substring(pos, this.features.value.length);
             this.triggerEvent('oninput');
             txta.focus();
-            txta.setSelectionRange(txta.value.length, txta.value.length);
+            txta.setSelectionRange(pos - 1, pos - 1);
+          });
+
+          document.addEventListener('keyup', (event) => {
+            const pos = txta.selectionStart;
+            event.preventDefault();
+            if (event.key === 'Backspace') {
+              this.features.value =
+                this.features.value.substring(0, pos) +
+                this.features.value.substring(pos + 1, this.features.value.length);
+              this.triggerEvent('oninput');
+              txta.focus();
+              txta.setSelectionRange(pos, pos);
+            }
           });
 
           break;
@@ -245,7 +262,9 @@ const Keyboard = {
           keyElement.textContent = 'del';
           keyElement.addEventListener('click', () => {
             const pos = txta.selectionStart;
-            this.features.value = this.features.value.substring(0, pos) + this.features.value.substring(pos + 1, this.features.value.length);
+            this.features.value =
+              this.features.value.substring(0, pos) +
+              this.features.value.substring(pos + 1, this.features.value.length);
             this.triggerEvent('oninput');
             txta.focus();
             txta.setSelectionRange(pos, pos);
@@ -254,8 +273,10 @@ const Keyboard = {
           document.addEventListener('keyup', (event) => {
             const pos = txta.selectionStart;
             event.preventDefault();
-            if (event.key == 'Delete') {
-              this.features.value = this.features.value.substring(0, pos) + this.features.value.substring(pos + 1, this.features.value.length);
+            if (event.key === 'Delete') {
+              this.features.value =
+                this.features.value.substring(0, pos) +
+                this.features.value.substring(pos + 1, this.features.value.length);
               this.triggerEvent('oninput');
               txta.focus();
               txta.setSelectionRange(pos, pos);
@@ -277,7 +298,7 @@ const Keyboard = {
 
           document.addEventListener('keyup', (event) => {
             event.preventDefault();
-            if (event.key.toLowerCase() == key) {
+            if (event.key.toLowerCase() === key) {
               this.features.value += event.key;
             }
           });
@@ -299,6 +320,7 @@ const Keyboard = {
   togglecaps() {
     this.features.caps = !this.features.caps;
 
+    /* eslint-disable-next-line */
     for (const key of this.units.keys) {
       if (key.childElementCount === 0) {
         key.textContent = this.features.caps
