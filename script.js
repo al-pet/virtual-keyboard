@@ -91,9 +91,8 @@ const Keyboard = {
 
           keyElement.addEventListener('click', () => {
             const pos = txta.selectionStart;
-            this.features.value =
-              this.features.value.substring(0, pos - 1) +
-              this.features.value.substring(pos, this.features.value.length);
+            this.features.value = this.features.value.substring(0, pos - 1)
+              + this.features.value.substring(pos, this.features.value.length);
             this.triggerEvent('oninput');
             txta.focus();
             txta.setSelectionRange(pos - 1, pos - 1);
@@ -103,9 +102,8 @@ const Keyboard = {
             const pos = txta.selectionStart;
             event.preventDefault();
             if (event.key === 'Backspace') {
-              this.features.value =
-                this.features.value.substring(0, pos) +
-                this.features.value.substring(pos + 1, this.features.value.length);
+              this.features.value = this.features.value.substring(0, pos)
+                + this.features.value.substring(pos + 1, this.features.value.length);
               this.triggerEvent('oninput');
               txta.focus();
               txta.setSelectionRange(pos, pos);
@@ -262,9 +260,8 @@ const Keyboard = {
           keyElement.textContent = 'del';
           keyElement.addEventListener('click', () => {
             const pos = txta.selectionStart;
-            this.features.value =
-              this.features.value.substring(0, pos) +
-              this.features.value.substring(pos + 1, this.features.value.length);
+            this.features.value = this.features.value.substring(0, pos)
+              + this.features.value.substring(pos + 1, this.features.value.length);
             this.triggerEvent('oninput');
             txta.focus();
             txta.setSelectionRange(pos, pos);
@@ -274,9 +271,8 @@ const Keyboard = {
             const pos = txta.selectionStart;
             event.preventDefault();
             if (event.key === 'Delete') {
-              this.features.value =
-                this.features.value.substring(0, pos) +
-                this.features.value.substring(pos + 1, this.features.value.length);
+              this.features.value = this.features.value.substring(0, pos)
+                + this.features.value.substring(pos + 1, this.features.value.length);
               this.triggerEvent('oninput');
               txta.focus();
               txta.setSelectionRange(pos, pos);
@@ -290,16 +286,24 @@ const Keyboard = {
           keyElement.textContent = key.toLowerCase();
 
           keyElement.addEventListener('click', () => {
-            this.features.value += this.features.caps ? key.toUpperCase() : key.toLowerCase();
+            const pos = txta.selectionStart;
+            const addSymbol = this.features.caps ? key.toUpperCase() : key.toLowerCase();
+            this.features.value = this.features.value.substring(0, pos)
+              + addSymbol + this.features.value.substring(pos, this.features.value.length);
             this.triggerEvent('oninput');
             txta.focus();
-            txta.setSelectionRange(txta.value.length, txta.value.length);
+            txta.setSelectionRange(pos, pos);
           });
 
           document.addEventListener('keyup', (event) => {
+            const pos = txta.selectionStart;
             event.preventDefault();
             if (event.key.toLowerCase() === key) {
-              this.features.value += event.key;
+              this.features.value = this.features.value.substring(0, pos - 1)
+                + event.key + this.features.value.substring(pos - 1, this.features.value.length);
+              this.triggerEvent('oninput');
+              txta.focus();
+              txta.setSelectionRange(pos, pos);
             }
           });
 
