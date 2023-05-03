@@ -73,7 +73,7 @@ const Keyboard = {
     eventCode = [
       'Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace',
       'Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Delete',
-      'caps', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter',
+      'CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter',
       'ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ArrowUp', 'ShiftRight',
       'ControlLeft', 'AltLeft', 'Space', 'AltRight', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'ControlRight',
     ];
@@ -117,9 +117,20 @@ const Keyboard = {
           keyElement.classList.add('keyboard__key-large');
 
           keyElement.addEventListener('click', () => {
+            const pos = txta.selectionStart;
             this.togglecaps();
             txta.focus();
-            txta.setSelectionRange(txta.value.length, txta.value.length);
+            txta.setSelectionRange(pos, pos);
+          });
+
+          document.addEventListener('keyup', (event) => {
+            const pos = txta.selectionStart;
+            event.preventDefault();
+            if (event.key === 'CapsLock') {
+              this.togglecaps();
+              txta.focus();
+              txta.setSelectionRange(pos, pos);
+            }
           });
 
           break;
@@ -143,10 +154,24 @@ const Keyboard = {
           keyElement.classList.add('keyboard__key-large');
 
           keyElement.addEventListener('click', () => {
-            this.features.value += '    ';
+            const pos = txta.selectionStart;
+            this.features.value = this.features.value.substring(0, pos)
+              + '    ' + this.features.value.substring(pos, this.features.value.length);
             this.triggerEvent('oninput');
             txta.focus();
-            txta.setSelectionRange(txta.value.length, txta.value.length);
+            txta.setSelectionRange(pos + 4, pos + 4);
+          });
+
+          document.addEventListener('keyup', (event) => {
+            const pos = txta.selectionStart;
+            event.preventDefault();
+            if (event.key === 'Tab') {
+              this.features.value = this.features.value.substring(0, pos)
+                + '    ' + this.features.value.substring(pos, this.features.value.length);
+              this.triggerEvent('oninput');
+              txta.focus();
+              txta.setSelectionRange(pos + 4, pos + 4);
+            }
           });
 
           break;
@@ -247,8 +272,13 @@ const Keyboard = {
 
           keyElement.addEventListener('click', () => {
             this.features.value += '';
-            altKey = 1;
-            keyElement.classList.add('active');
+            altKey = altKey === 0 ? 1 : 0;
+            if (altKey === 1) {
+              keyElement.classList.add('active');
+            } else {
+              keyElement.classList.remove('active');
+            }
+
             this.triggerEvent('oninput');
             txta.focus();
             txta.setSelectionRange(txta.value.length, txta.value.length);
@@ -292,11 +322,12 @@ const Keyboard = {
               + addSymbol + this.features.value.substring(pos, this.features.value.length);
             this.triggerEvent('oninput');
             txta.focus();
-            txta.setSelectionRange(pos, pos);
+            txta.setSelectionRange(pos + 1, pos + 1);
           });
 
           document.addEventListener('keyup', (event) => {
             const pos = txta.selectionStart;
+            console.log(event.key);
             event.preventDefault();
             if (event.key.toLowerCase() === key) {
               this.features.value = this.features.value.substring(0, pos - 1)
