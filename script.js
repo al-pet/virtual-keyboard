@@ -1,4 +1,5 @@
 let altKey = 0;
+let shiftKey = 0;
 let keySet;
 let eventCode;
 
@@ -62,14 +63,25 @@ const Keyboard = {
       ];
     }
     if (this.features.lang === 'ru') {
-      keySet = [
-        'ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'backspace',
-        'tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', 'del',
-        'caps', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'enter',
-        'shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', 'up', 'shift',
-        'ctrl', 'alt', 'space', 'alt', 'left', 'down', 'right', 'ctrl',
-      ];
+      if (shiftKey === 0) {
+        keySet = [
+          'ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'backspace',
+          'tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', 'del',
+          'caps', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'enter',
+          'shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', 'up', 'shift',
+          'ctrl', 'alt', 'space', 'alt', 'left', 'down', 'right', 'ctrl',
+        ];
+      } else {
+        keySet = [
+          'Ё', '!', '"', '№', ';', '%', ':', '?', '*', '(', ')', '_', '+', 'backspace',
+          'tab', 'Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ъ', 'del',
+          'caps', 'Ф', 'Ы', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Э', 'enter',
+          'shift', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', ',', 'up', 'shift',
+          'ctrl', 'alt', 'space', 'alt', 'left', 'down', 'right', 'ctrl',
+        ];
+      }
     }
+
     eventCode = [
       'Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace',
       'Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Delete',
@@ -155,8 +167,8 @@ const Keyboard = {
 
           keyElement.addEventListener('click', () => {
             const pos = txta.selectionStart;
-            this.features.value = this.features.value.substring(0, pos)
-              + '    ' + this.features.value.substring(pos, this.features.value.length);
+            this.features.value = `${this.features.value.substring(0, pos)
+            }    ${this.features.value.substring(pos, this.features.value.length)}`;
             this.triggerEvent('oninput');
             txta.focus();
             txta.setSelectionRange(pos + 4, pos + 4);
@@ -166,8 +178,8 @@ const Keyboard = {
             const pos = txta.selectionStart;
             event.preventDefault();
             if (event.key === 'Tab') {
-              this.features.value = this.features.value.substring(0, pos)
-                + '    ' + this.features.value.substring(pos, this.features.value.length);
+              this.features.value = `${this.features.value.substring(0, pos)
+              }    ${this.features.value.substring(pos, this.features.value.length)}`;
               this.triggerEvent('oninput');
               txta.focus();
               txta.setSelectionRange(pos + 4, pos + 4);
@@ -181,7 +193,8 @@ const Keyboard = {
           keyElement.classList.add('keyboard__key-large');
 
           keyElement.addEventListener('click', () => {
-            this.features.value += '';
+            const pos = txta.selectionStart;
+            // this.features.value += '';
             if (altKey === 1) {
               localStorage.lang = localStorage.lang === 'ru' ? localStorage.lang = 'en' : localStorage.lang = 'ru';
               Keyboard.stop();
@@ -189,6 +202,49 @@ const Keyboard = {
               altKey = 0;
               txta.focus();
               txta.setSelectionRange(txta.value.length, txta.value.length);
+            } else if (shiftKey === 0) {
+              shiftKey = 1;
+              Keyboard.stop();
+              Keyboard.start();
+              this.togglecaps();
+              keyElement.classList.add('active');
+            } else {
+              shiftKey = 0;
+              // keyElement.classList.remove('active');
+              Keyboard.stop();
+              Keyboard.start();
+              this.togglecaps();
+            }
+            txta.focus();
+            txta.setSelectionRange(pos, pos);
+          });
+
+          document.addEventListener('keyup', (event) => {
+            const pos = txta.selectionStart;
+            event.preventDefault();
+            if (event.key === 'Shift') {
+              if (altKey === 1) {
+                localStorage.lang = localStorage.lang === 'ru' ? localStorage.lang = 'en' : localStorage.lang = 'ru';
+                Keyboard.stop();
+                Keyboard.start();
+                altKey = 0;
+                txta.focus();
+                txta.setSelectionRange(txta.value.length, txta.value.length);
+              } else if (shiftKey === 0) {
+                shiftKey = 1;
+                Keyboard.stop();
+                Keyboard.start();
+                this.togglecaps();
+                keyElement.classList.add('active');
+              } else {
+                shiftKey = 0;
+                // keyElement.classList.remove('active');
+                Keyboard.stop();
+                Keyboard.start();
+                this.togglecaps();
+              }
+              txta.focus();
+              txta.setSelectionRange(pos, pos);
             }
           });
 
@@ -327,7 +383,6 @@ const Keyboard = {
 
           document.addEventListener('keyup', (event) => {
             const pos = txta.selectionStart;
-            console.log(event.key);
             event.preventDefault();
             if (event.key.toLowerCase() === key) {
               this.features.value = this.features.value.substring(0, pos - 1)
