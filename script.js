@@ -2,6 +2,7 @@ let altKey = 0;
 let shiftKey = 0;
 let keySet;
 let eventCode;
+let currentKey;
 
 const Keyboard = {
   units: {
@@ -219,35 +220,6 @@ const Keyboard = {
             txta.setSelectionRange(pos, pos);
           });
 
-          document.addEventListener('keyup', (event) => {
-            const pos = txta.selectionStart;
-            event.preventDefault();
-            if (event.key === 'Shift') {
-              if (altKey === 1) {
-                localStorage.lang = localStorage.lang === 'ru' ? localStorage.lang = 'en' : localStorage.lang = 'ru';
-                Keyboard.stop();
-                Keyboard.start();
-                altKey = 0;
-                txta.focus();
-                txta.setSelectionRange(txta.value.length, txta.value.length);
-              } else if (shiftKey === 0) {
-                shiftKey = 1;
-                Keyboard.stop();
-                Keyboard.start();
-                this.togglecaps();
-                keyElement.classList.add('active');
-              } else {
-                shiftKey = 0;
-                // keyElement.classList.remove('active');
-                Keyboard.stop();
-                Keyboard.start();
-                this.togglecaps();
-              }
-              txta.focus();
-              txta.setSelectionRange(pos, pos);
-            }
-          });
-
           break;
 
         case 'up':
@@ -384,7 +356,9 @@ const Keyboard = {
           document.addEventListener('keyup', (event) => {
             const pos = txta.selectionStart;
             event.preventDefault();
-            if (event.key.toLowerCase() === key) {
+
+            currentKey = document.querySelector(`button[data-code=${event.code}]`).textContent;
+            if (currentKey === key) {
               this.features.value = this.features.value.substring(0, pos - 1)
                 + event.key + this.features.value.substring(pos - 1, this.features.value.length);
               this.triggerEvent('oninput');
