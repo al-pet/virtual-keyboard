@@ -4,7 +4,7 @@ let keySet;
 let eventCode;
 let currentKey;
 
-const Keyboard = {
+const keyboard = {
   units: {
     main: null,
     keysWrapper: null,
@@ -169,7 +169,7 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             const pos = txta.selectionStart;
             this.features.value = `${this.features.value.substring(0, pos)
-            }    ${this.features.value.substring(pos, this.features.value.length)}`;
+              }    ${this.features.value.substring(pos, this.features.value.length)}`;
             this.triggerEvent('oninput');
             txta.focus();
             txta.setSelectionRange(pos + 4, pos + 4);
@@ -180,7 +180,7 @@ const Keyboard = {
             event.preventDefault();
             if (event.key === 'Tab') {
               this.features.value = `${this.features.value.substring(0, pos)
-              }    ${this.features.value.substring(pos, this.features.value.length)}`;
+                }    ${this.features.value.substring(pos, this.features.value.length)}`;
               this.triggerEvent('oninput');
               txta.focus();
               txta.setSelectionRange(pos + 4, pos + 4);
@@ -197,22 +197,22 @@ const Keyboard = {
             const position = txta.selectionStart;
             if (altKey === 1) {
               localStorage.lang = localStorage.lang === 'ru' ? localStorage.lang = 'en' : localStorage.lang = 'ru';
-              Keyboard.stop();
-              Keyboard.start();
+              keyboard.stop();
+              keyboard.start();
               altKey = 0;
               txta.focus();
               txta.setSelectionRange(txta.value.length, txta.value.length);
             } else if (shiftKey === 0) {
               shiftKey = 1;
-              // Keyboard.stop();
-              // Keyboard.start();
+              // keyboard.stop();
+              // keyboard.start();
               this.togglecaps();
               // keyElement.classList.add('active');
             } else {
               shiftKey = 0;
               // keyElement.classList.remove('active');
-              // Keyboard.stop();
-              // Keyboard.start();
+              // keyboard.stop();
+              // keyboard.start();
               this.togglecaps();
             }
             txta.focus();
@@ -276,7 +276,7 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             const pos = txta.selectionStart;
             this.features.value = `${this.features.value.substring(0, pos)
-            } ${this.features.value.substring(pos, this.features.value.length)}`;
+              } ${this.features.value.substring(pos, this.features.value.length)}`;
             this.triggerEvent('oninput');
             txta.focus();
             txta.setSelectionRange(pos + 1, pos + 1);
@@ -287,7 +287,7 @@ const Keyboard = {
             event.preventDefault();
             if (event.key === ' ') {
               this.features.value = `${this.features.value.substring(0, pos - 1)
-              } ${this.features.value.substring(pos - 1, this.features.value.length)}`;
+                } ${this.features.value.substring(pos - 1, this.features.value.length)}`;
               this.triggerEvent('oninput');
               txta.focus();
               txta.setSelectionRange(pos, pos);
@@ -422,24 +422,25 @@ window.addEventListener('DOMContentLoaded', () => {
   textArea.autofocus = true;
   document.body.append(textArea);
 
-  Keyboard.start();
+  keyboard.start();
 });
 
 document.addEventListener('keydown', (event) => {
   if (document.querySelector(`button[data-code=${event.code}]`)) {
     document.querySelector(`button[data-code=${event.code}]`).classList.add('active');
-
-    if (event.key === 'Shift' && event.altKey) {
-      localStorage.lang = localStorage.lang === 'ru' ? localStorage.lang = 'en' : localStorage.lang = 'ru';
-
-      Keyboard.stop();
-      Keyboard.start();
-    }
   }
 });
 
 document.addEventListener('keyup', (event) => {
   if (document.querySelector(`button[data-code=${event.code}]`)) {
     document.querySelector(`button[data-code=${event.code}]`).classList.remove('active');
+
+    if (event.key === 'Shift' && event.altKey) {
+      localStorage.lang = localStorage.lang === 'ru' ? localStorage.lang = 'en' : localStorage.lang = 'ru';
+
+      keyboard.stop();
+      keyboard.start();
+    }
+
   }
 });
